@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root {
+    /* --- DARK THEME --- */
     --bg: #050816;
     --panel: #0b1020;
     --accent: #38bdf8;
@@ -13,7 +14,41 @@
     --accent-2: #22c55e;
     --text: #e5e7eb;
     --muted: #9ca3af;
+
+    --shell: rgba(148,163,184,0.7);
+    --electron: #38bdf8;
+
+    --nucleus1: #22c55e;
+    --nucleus2: #16a34a;
+    --nucleus3: #052e16;
+
+    /* NEW: nucleus text color in dark mode */
+    --nucleus-text: #e5e7eb;
   }
+
+  /* --- LIGHT THEME OVERRIDES --- */
+  body.light {
+    --bg: #ffffff;
+    --panel: #f0f0f0;
+
+    --accent: #000000;
+    --accent-soft: rgba(0,0,0,0.1);
+    --accent-2: #000000;
+
+    --text: #000000;
+    --muted: #444444;
+
+    --shell: rgba(0,0,0,0.5);
+    --electron: #000000;
+
+    --nucleus1: #000000;
+    --nucleus2: #444444;
+    --nucleus3: #aaaaaa;
+
+    /* NEW: nucleus letter should be white */
+    --nucleus-text: #ffffff;
+  }
+
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -21,362 +56,253 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background: radial-gradient(circle at top, #172554 0, #020617 55%, #000 100%);
+    background: var(--bg);
     color: var(--text);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     padding: 24px 8px 40px;
+    transition: background 0.3s, color 0.3s;
   }
+
   .app {
-    background: rgba(15,23,42,0.95);
+    background: var(--panel);
     border-radius: 20px;
     border: 1px solid rgba(148,163,184,0.4);
-    box-shadow: 0 24px 80px rgba(15,23,42,0.9);
     max-width: 960px;
     width: 100%;
     padding: 20px 22px 26px;
   }
+
   header {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px 18px;
-    margin-bottom: 16px;
   }
   header h1 {
-    font-size: 1.5rem;
     margin: 0;
-    letter-spacing: 0.02em;
+    font-size: 1.5rem;
   }
-  header span.badge {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: rgba(56,189,248,0.16);
-    border: 1px solid rgba(56,189,248,0.7);
-    color: #e0f2fe;
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
   }
+  .toggle input {
+    transform: scale(1.2);
+  }
+
   .layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-columns: 1.3fr 1fr;
     gap: 18px;
+    margin-top: 18px;
   }
   @media (max-width: 800px) {
-    .layout {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    .layout { grid-template-columns: 1fr; }
   }
+
   .canvas-wrap {
-    background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
-    border-radius: 18px;
-    border: 1px solid rgba(30,64,175,0.6);
+    border: 1px solid var(--shell);
+    border-radius: 16px;
     padding: 12px;
-    position: relative;
-    overflow: hidden;
   }
+
   canvas {
     width: 100%;
     max-width: 500px;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
     display: block;
-    margin: 0 auto;
-    background: radial-gradient(circle at center, #020617 0, #020617 55%, #000 100%);
+    margin: auto;
+    background: var(--bg);
+    transition: background 0.3s;
   }
+
   .controls {
-    background: rgba(15,23,42,0.9);
-    border-radius: 16px;
     border: 1px solid rgba(148,163,184,0.35);
-    padding: 14px 14px 16px;
+    border-radius: 16px;
+    padding: 14px;
   }
-  .controls h2 {
-    margin: 0 0 6px;
-    font-size: 1.05rem;
-  }
+
   label {
-    display: block;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--muted);
-    margin-bottom: 6px;
   }
+
   select, input[type="number"] {
     width: 100%;
-    padding: 8px 9px;
+    padding: 8px;
     border-radius: 10px;
-    border: 1px solid rgba(148,163,184,0.55);
-    background: rgba(15,23,42,0.9);
-    color: var(--text);
-    font-size: 0.9rem;
-    outline: none;
-  }
-  select:focus, input[type="number"]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px rgba(56,189,248,0.6);
-  }
-  .row {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  @media (max-width: 480px) {
-    .row { grid-template-columns: minmax(0, 1fr); }
-  }
-  .info {
-    font-size: 0.86rem;
-    color: var(--muted);
-    margin-top: 8px;
-  }
-  .info strong {
+    border: 1px solid var(--muted);
+    background: var(--panel);
     color: var(--text);
   }
+
   .stats {
     margin-top: 12px;
-    padding: 10px 10px 8px;
+    padding: 10px;
     border-radius: 12px;
-    background: radial-gradient(circle at top left, rgba(56,189,248,0.2), rgba(15,23,42,0.8));
-    border: 1px solid rgba(56,189,248,0.5);
-    font-size: 0.86rem;
-  }
-  .stats p {
-    margin: 2px 0;
-  }
-  .stats span.label {
-    color: var(--muted);
-  }
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 14px;
-    margin-top: 10px;
-    font-size: 0.8rem;
-  }
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    display: inline-block;
-    margin-right: 6px;
+    background: var(--accent-soft);
   }
 </style>
 </head>
+
 <body>
 <div class="app">
   <header>
     <h1>Bohr Model Drawer</h1>
-    <span class="badge">Chem 11 · Shells &amp; Electrons</span>
+
+    <!-- Theme Toggle -->
+    <label class="toggle">
+      <input id="themeToggle" type="checkbox">
+      <span>Light Mode</span>
+    </label>
   </header>
 
   <div class="layout">
+
     <section class="canvas-wrap">
       <canvas id="bohrCanvas" width="520" height="520"></canvas>
     </section>
 
     <section class="controls">
-      <h2>Choose an Element</h2>
+      <label>Choose Element</label>
+      <select id="elementSelect">
+        <option value="1">H (1)</option>
+        <option value="3">Li (3)</option>
+        <option value="8" selected>O (8)</option>
+        <option value="11">Na (11)</option>
+        <option value="12">Mg (12)</option>
+        <option value="17">Cl (17)</option>
+        <option value="20">Ca (20)</option>
+      </select>
 
-      <div class="row">
-        <div>
-          <label for="elementSelect">Element (Z ≤ 20)</label>
-          <select id="elementSelect">
-            <!-- First 20 elements -->
-            <option value="1">H (1)</option>
-            <option value="2">He (2)</option>
-            <option value="3">Li (3)</option>
-            <option value="4">Be (4)</option>
-            <option value="5">B (5)</option>
-            <option value="6">C (6)</option>
-            <option value="7">N (7)</option>
-            <option value="8" selected>O (8)</option>
-            <option value="9">F (9)</option>
-            <option value="10">Ne (10)</option>
-            <option value="11">Na (11)</option>
-            <option value="12">Mg (12)</option>
-            <option value="13">Al (13)</option>
-            <option value="14">Si (14)</option>
-            <option value="15">P (15)</option>
-            <option value="16">S (16)</option>
-            <option value="17">Cl (17)</option>
-            <option value="18">Ar (18)</option>
-            <option value="19">K (19)</option>
-            <option value="20">Ca (20)</option>
-          </select>
-        </div>
-        <div>
-          <label for="atomicNumber">Or set Z (1–20)</label>
-          <input id="atomicNumber" type="number" min="1" max="20" value="8" />
-        </div>
-      </div>
-
-      <div class="info">
-        <p><strong>Tip:</strong> This uses simple Bohr shells: 1st shell holds 2e⁻, 2nd holds 8e⁻, 3rd holds 8e⁻, 4th holds 18e⁻ (enough for Z ≤ 20).</p>
+      <div style="margin-top:10px;">
+        <label>Atomic Number (Z)</label>
+        <input id="atomicNumber" type="number" min="1" max="20" value="8" />
       </div>
 
       <div class="stats" id="stats"></div>
-
-      <div class="legend">
-        <span><span class="dot" style="background:#22c55e;"></span>Nucleus (protons + neutrons)</span>
-        <span><span class="dot" style="background:#38bdf8;"></span>Electrons</span>
-        <span><span class="dot" style="border:2px solid #38bdf8;background:transparent;"></span>Shells (energy levels)</span>
-      </div>
     </section>
   </div>
 </div>
 
 <script>
-  // --- basic data for first 20 elements ---
-  const elements = [
-    { Z: 1, symbol: "H",  name: "Hydrogen"   },
-    { Z: 2, symbol: "He", name: "Helium"     },
-    { Z: 3, symbol: "Li", name: "Lithium"    },
-    { Z: 4, symbol: "Be", name: "Beryllium"  },
-    { Z: 5, symbol: "B",  name: "Boron"      },
-    { Z: 6, symbol: "C",  name: "Carbon"     },
-    { Z: 7, symbol: "N",  name: "Nitrogen"   },
-    { Z: 8, symbol: "O",  name: "Oxygen"     },
-    { Z: 9, symbol: "F",  name: "Fluorine"   },
-    { Z:10, symbol: "Ne", name: "Neon"       },
-    { Z:11, symbol: "Na", name: "Sodium"     },
-    { Z:12, symbol: "Mg", name: "Magnesium"  },
-    { Z:13, symbol: "Al", name: "Aluminum"   },
-    { Z:14, symbol: "Si", name: "Silicon"    },
-    { Z:15, symbol: "P",  name: "Phosphorus" },
-    { Z:16, symbol: "S",  name: "Sulfur"     },
-    { Z:17, symbol: "Cl", name: "Chlorine"   },
-    { Z:18, symbol: "Ar", name: "Argon"      },
-    { Z:19, symbol: "K",  name: "Potassium"  },
-    { Z:20, symbol: "Ca", name: "Calcium"    }
-  ];
+const canvas = document.getElementById("bohrCanvas");
+const ctx = canvas.getContext("2d");
+const elementSelect = document.getElementById("elementSelect");
+const atomicInput = document.getElementById("atomicNumber");
+const statsDiv = document.getElementById("stats");
+const themeToggle = document.getElementById("themeToggle");
 
-  const canvas = document.getElementById("bohrCanvas");
-  const ctx = canvas.getContext("2d");
-  const elementSelect = document.getElementById("elementSelect");
-  const atomicInput = document.getElementById("atomicNumber");
-  const statsDiv = document.getElementById("stats");
+const elements = {
+  1:"H", 3:"Li", 8:"O", 11:"Na", 12:"Mg", 17:"Cl", 20:"Ca"
+};
 
-  function getElementByZ(Z) {
-    return elements.find(e => e.Z === Z) || elements[0];
+function electronShells(Z) {
+  const caps = [2,8,8,18];
+  const shells = [];
+  let left = Z;
+  for (let cap of caps) {
+    shells.push(Math.min(cap, left));
+    left -= cap;
+    if (left <= 0) break;
   }
+  return shells;
+}
 
-  function electronConfiguration(Z) {
-    // Simple Bohr shells capacities
-    const capacities = [2, 8, 8, 18];
-    const shells = [];
-    let remaining = Z;
+function drawBohr(Z) {
+  const symbol = elements[Z] || "?";
+  const shells = electronShells(Z);
 
-    for (let cap of capacities) {
-      if (remaining <= 0) break;
-      const fill = Math.min(cap, remaining);
-      shells.push(fill);
-      remaining -= fill;
-    }
-    return shells;
-  }
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx = canvas.width/2;
+  const cy = canvas.height/2;
 
-  function drawBohr(Z) {
-    const elem = getElementByZ(Z);
-    const shells = electronConfiguration(Z);
+  const maxR = 200;
+  const gap = maxR/(shells.length+1);
 
-    // prepare canvas
-    const w = canvas.width;
-    const h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
+  // shells
+  ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--shell');
+  ctx.lineWidth = 1.5;
 
-    const cx = w / 2;
-    const cy = h / 2;
-    const maxRadius = Math.min(w, h) * 0.42;
-
-    // draw shells
-    const countShells = shells.length;
-    const shellSpacing = maxRadius / (countShells + 1);
-
-    ctx.lineWidth = 1.3;
-    ctx.strokeStyle = "rgba(148,163,184,0.7)";
-
-    for (let i = 0; i < countShells; i++) {
-      const r = shellSpacing * (i + 1);
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    // draw electrons
-    ctx.fillStyle = "#38bdf8";
-    for (let i = 0; i < shells.length; i++) {
-      const electronsInShell = shells[i];
-      const r = shellSpacing * (i + 1);
-      for (let j = 0; j < electronsInShell; j++) {
-        const angle = (2 * Math.PI * j) / electronsInShell - Math.PI / 2;
-        const ex = cx + r * Math.cos(angle);
-        const ey = cy + r * Math.sin(angle);
-        ctx.beginPath();
-        ctx.arc(ex, ey, 6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // draw nucleus
-    const nucleusRadius = shellSpacing * 0.6;
-    const gradient = ctx.createRadialGradient(cx - 6, cy - 6, 4, cx, cy, nucleusRadius);
-    gradient.addColorStop(0, "#22c55e");
-    gradient.addColorStop(0.5, "#16a34a");
-    gradient.addColorStop(1, "#052e16");
-    ctx.fillStyle = gradient;
-    ctx.strokeStyle = "rgba(34,197,94,0.9)";
-    ctx.lineWidth = 2;
+  shells.forEach((_,i)=>{
     ctx.beginPath();
-    ctx.arc(cx, cy, nucleusRadius, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.arc(cx, cy, gap*(i+1), 0, Math.PI*2);
     ctx.stroke();
+  });
 
-    // nucleus text (symbol + Z)
-    ctx.fillStyle = "#ecfdf5";
-    ctx.font = "bold 32px system-ui, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(elem.symbol, cx, cy - 4);
+  // electrons
+  ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--electron');
 
-    ctx.font = "12px system-ui, sans-serif";
-    ctx.fillStyle = "rgba(226,232,240,0.85)";
-    ctx.fillText("Z=" + elem.Z, cx, cy + nucleusRadius - 10);
+  shells.forEach((count, i)=>{
+    const r = gap*(i+1);
+    for(let j=0; j<count; j++){
+      const ang = (2*Math.PI*j)/count;
+      const x = cx + r * Math.cos(ang);
+      const y = cy + r * Math.sin(ang);
+      ctx.beginPath();
+      ctx.arc(x,y,6,0,Math.PI*2);
+      ctx.fill();
+    }
+  });
 
-    // update stats
-    const totalElectrons = shells.reduce((a,b) => a + b, 0);
-    const shellDesc = shells
-      .map((n, i) => `${i+1} (${n} e⁻)`)
-      .join(", ");
+  // nucleus gradient
+  const cs = getComputedStyle(document.body);
+  const g = ctx.createRadialGradient(cx,cy,5,cx,cy,30);
+  g.addColorStop(0, cs.getPropertyValue('--nucleus1'));
+  g.addColorStop(0.5, cs.getPropertyValue('--nucleus2'));
+  g.addColorStop(1, cs.getPropertyValue('--nucleus3'));
 
-    statsDiv.innerHTML = `
-      <p><span class="label">Element:</span> <strong>${elem.name}</strong> (${elem.symbol}), Z = ${elem.Z}</p>
-      <p><span class="label">Electrons:</span> ${totalElectrons} &nbsp; (neutral atom)</p>
-      <p><span class="label">Bohr shells:</span> ${shellDesc}</p>
-    `;
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(cx,cy,30,0,Math.PI*2);
+  ctx.fill();
+
+  // nucleus symbol TEXT (updated!)
+  ctx.fillStyle = cs.getPropertyValue('--nucleus-text');
+  ctx.font = "bold 24px system-ui";
+  ctx.textAlign = "center";
+  ctx.fillText(symbol, cx, cy+3);
+
+  statsDiv.innerHTML = `
+    <strong>${symbol}</strong> (Z = ${Z})<br>
+    Shells: ${shells.join(" / ")} electrons
+  `;
+}
+
+// sync dropdown + inputs
+elementSelect.addEventListener("change", ()=>{
+  const Z = parseInt(elementSelect.value);
+  atomicInput.value = Z;
+  drawBohr(Z);
+});
+atomicInput.addEventListener("input", ()=>{
+  let Z = parseInt(atomicInput.value);
+  if (Z<1) Z=1;
+  if (Z>20) Z=20;
+  atomicInput.value = Z;
+  elementSelect.value = Z;
+  drawBohr(Z);
+});
+
+// theme toggle
+themeToggle.addEventListener("change", ()=>{
+  if (themeToggle.checked) {
+    document.body.classList.add("light");
+  } else {
+    document.body.classList.remove("light");
   }
+  drawBohr(parseInt(atomicInput.value));
+});
 
-  function syncFromSelect() {
-    const Z = parseInt(elementSelect.value, 10);
-    atomicInput.value = Z;
-    drawBohr(Z);
-  }
-
-  function syncFromInput() {
-    let Z = parseInt(atomicInput.value, 10);
-    if (isNaN(Z)) Z = 1;
-    if (Z < 1) Z = 1;
-    if (Z > 20) Z = 20;
-    atomicInput.value = Z;
-    elementSelect.value = Z.toString();
-    drawBohr(Z);
-  }
-
-  elementSelect.addEventListener("change", syncFromSelect);
-  atomicInput.addEventListener("input", syncFromInput);
-
-  // initial draw
-  drawBohr(8);
+// initial
+drawBohr(8);
 </script>
+
 </body>
 </html>
 
